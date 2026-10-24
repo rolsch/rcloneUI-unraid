@@ -182,16 +182,23 @@ if [ -f /boot/config/plugins/rclone/install/rclone ]; then
   version=`rcloneorig --version | head -n 1`
 fi;
 
+# Upgrade old WebUI port if necessary
+if [ -f /boot/config/plugins/rclone/settings.cfg ]; then
+  sed -i 's/^WEBUI_PORT=5572/WEBUI_PORT=50803/' /boot/config/plugins/rclone/settings.cfg
+fi
+
 # Make sure that --rc-serve is in the settings.cfg
 sed -i '/^WEBUI_START_PARAMS=/ { /--rc-serve/! s/$/ --rc-serve/; }' /boot/config/plugins/rclone/settings.cfg
 
 if [ ! -f /boot/config/plugins/rclone/settings.cfg ]; then
   echo "WEBUI_ENABLED=false
 WEBUI_START_PARAMS=--rc-no-auth --rc-serve
-WEBUI_PORT=5572" > /boot/config/plugins/rclone/settings.cfg
+WEBUI_PORT=50803" > /boot/config/plugins/rclone/settings.cfg
 fi
 
-/usr/local/emhttp/plugins/rclone/webuiScript.sh "VERSION"
+# Remove old webui leftovers
+rm -rf /boot/config/plugins/rclone/webui
+rm -rf /root/.cache/rclone/webui
 
 rm -f $(ls /boot/config/plugins/rclone/install/rclone*.txz 2>/dev/null | grep -v '&bundleversion;')
 rm -f /usr/sbin/rclone
@@ -287,6 +294,8 @@ Uninstall script
 <INLINE>
 kill -SIGINT $(pgrep -f "rcloneorig.*--rc-web-gui")
 rm -rf /boot/config/plugins/rclone/install
+rm -rf /boot/config/plugins/rclone/webui
+rm -rf /root/.cache/rclone/webui
 rm -f /usr/sbin/rcloneorig
 rm -f /usr/sbin/rclone
 removepkg rclone-&bundleversion;-bundle >/dev/null
