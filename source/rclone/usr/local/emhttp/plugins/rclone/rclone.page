@@ -27,7 +27,8 @@ function updaterclone(branch) {
 
 function webui(form) {
    var state = form.webui_status.value;
-   openBox('/usr/local/emhttp/plugins/rclone/webuiScript.sh&arg1='+state,"rclone WebUI",450,800,true);
+   var path = "/usr/local/emhttp/plugins/rclone/webuiScript.sh";
+   openBox('/usr/local/emhttp/plugins/rclone/startScript.sh&arg1='+path+'&arg2='+state,"rclone WebUI",450,800,true);
 }
 </script>
 
@@ -121,8 +122,12 @@ if ($branch == "1") {
 	<option value="true" <?php if($settings['WEBUI_ENABLED'] == true) echo("selected")?>>Enabled</option>
 	</select> 
 
+	<?
+	echo "<br>";
+	echo "Port: " . $settings['WEBUI_PORT'];
+	?>
 	<br><br>
-	<input type="button" value="Apply" onclick="webui(this.form)">
+	<input type="button" value="Apply / Restart" onclick="webui(this.form)">
   <?
   if (!empty($webui_pid)) {
     echo '<input type="button" class="localURL" value="Open WebUI" onclick="window.open(\'http://' . $_SERVER['SERVER_ADDR'] . ':' . $settings['WEBUI_PORT'] . '\', \'_blank\')" />';
