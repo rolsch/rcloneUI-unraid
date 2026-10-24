@@ -122,8 +122,12 @@ if ($branch == "1") {
 	<option value="true" <?php if($settings['WEBUI_ENABLED'] == true) echo("selected")?>>Enabled</option>
 	</select> 
 
+	<?
+	echo "<br>";
+	echo "Port: " . $settings['WEBUI_PORT'];
+	?>
 	<br><br>
-	<input type="button" value="Apply" onclick="webui(this.form)">
+	<input type="button" value="Apply / Restart" onclick="webui(this.form)">
   <?
   if (!empty($webui_pid)) {
     echo '<input type="button" class="localURL" value="Open WebUI" onclick="window.open(\'http://' . $_SERVER['SERVER_ADDR'] . ':' . $settings['WEBUI_PORT'] . '\', \'_blank\')" />';
