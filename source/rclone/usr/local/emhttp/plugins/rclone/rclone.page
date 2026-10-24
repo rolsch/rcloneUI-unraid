@@ -27,7 +27,8 @@ function updaterclone(branch) {
 
 function webui(form) {
    var state = form.webui_status.value;
-   openBox('/usr/local/emhttp/plugins/rclone/webuiScript.sh&arg1='+state,"rclone WebUI",450,800,true);
+   var path = "/usr/local/emhttp/plugins/rclone/webuiScript.sh";
+   openBox('/usr/local/emhttp/plugins/rclone/startScript.sh&arg1='+path+'&arg2='+state,"rclone WebUI",450,800,true);
 }
 </script>
 
