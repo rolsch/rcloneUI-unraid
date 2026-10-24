@@ -43,22 +43,6 @@ $settings = parse_ini_file('/boot/config/plugins/rclone/settings.cfg');
 exec('rclone version --check | grep -Po "(([a-z])*:( )*)\K( )*([0-9])([^ ])*[0-9]"', $rclone_version);
 $currentversion = $rclone_version[0];
 
-if (!file('/boot/config/plugins/rclone/webui/latest')) {
-  exec('/usr/local/emhttp/plugins/rclone/webuiScript.sh "VERSION"');
-  if (!file_exists('/boot/config/plugins/rclone/webui/latest')) {
-    $webui_latest = "Error fetching version number";
-  } else {
-    $webui_latest = exec('cat /boot/config/plugins/rclone/webui/latest | head -1');
-  }
-} else {
-  $webui_latest = exec('cat /boot/config/plugins/rclone/webui/latest | head -1');
-}
-
-$webui_local = exec("ls -1 /boot/config/plugins/rclone/webui/*.zip 2>/dev/null | rev | cut -d '/' -f1 | cut -d '.' -f2- | rev | sort -V | head -1");
-if (empty($webui_local)) {
-  $webui_local = "not installed";
-}
-
 $webui_pid = exec('pgrep -f "rcloneorig.*--rc-web-gui"');
 ?>
 
@@ -137,14 +121,8 @@ if ($branch == "1") {
 	<option value="true" <?php if($settings['WEBUI_ENABLED'] == true) echo("selected")?>>Enabled</option>
 	</select> 
 
-	<?
-  echo "<br>";
-	echo "Installed version: $webui_local";
-	echo "<br>";
-	echo "Latest version:&emsp;&ensp;$webui_latest";
-	?>
-	<br>
-	<input type="button" value="Update" onclick="webui(this.form)">
+	<br><br>
+	<input type="button" value="Apply" onclick="webui(this.form)">
   <?
   if (!empty($webui_pid)) {
     echo '<input type="button" class="localURL" value="Open WebUI" onclick="window.open(\'http://' . $_SERVER['SERVER_ADDR'] . ':' . $settings['WEBUI_PORT'] . '\', \'_blank\')" />';
